@@ -1,0 +1,237 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Stylumia Design System */
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.75rem;
+
+    /* Stylumia Dynamic Colors */
+    --accent-hue: 220;
+    --accent-saturation: 50%;
+    --accent-lightness: 60%;
+    --dynamic-accent: hsl(var(--accent-hue), var(--accent-saturation), var(--accent-lightness));
+    --dynamic-accent-light: hsl(var(--accent-hue), calc(var(--accent-saturation) * 0.3), 95%);
+    --dynamic-accent-dark: hsl(var(--accent-hue), var(--accent-saturation), 30%);
+    
+    /* Brand Gold Color */
+    --brand-gold: #a37d2f;
+    --brand-gold-light: #d4b366;
+    --brand-gold-dark: #8a6826;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-gradient-to-br from-slate-50 via-white to-slate-100 text-foreground font-sans;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply backdrop-blur-xl bg-white/70 border border-white/20 shadow-xl shadow-black/10;
+  }
+  
+  .glass-panel-dark {
+    @apply backdrop-blur-xl bg-black/20 border border-white/10 shadow-xl shadow-black/20;
+  }
+
+  .dynamic-accent {
+    color: var(--dynamic-accent);
+  }
+
+  .dynamic-accent-bg {
+    background-color: var(--dynamic-accent);
+  }
+
+  .dynamic-accent-border {
+    border-color: var(--dynamic-accent);
+  }
+
+  .brand-gold {
+    color: var(--brand-gold);
+  }
+
+  .brand-gold-bg {
+    background-color: var(--brand-gold);
+  }
+
+  .brand-gold-border {
+    border-color: var(--brand-gold);
+  }
+
+  .stylumia-gradient {
+    background: linear-gradient(135deg, var(--brand-gold), var(--brand-gold-light), var(--dynamic-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .hover-lift:hover {
+    @apply transform -translate-y-1 shadow-2xl shadow-black/15;
+  }
+
+  .glow-on-hover:hover {
+    box-shadow: 0 0 30px var(--brand-gold-light), 0 20px 40px -10px rgba(0,0,0,0.1);
+  }
+
+  .tab-active {
+    @apply relative;
+  }
+
+  .tab-active::after {
+    content: '';
+    @apply absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r;
+    background: linear-gradient(90deg, var(--brand-gold), transparent);
+  }
+
+  .tab-transition {
+    @apply transition-all duration-500 ease-in-out;
+  }
+}
+
+@layer utilities {
+  .animate-gentle-pulse {
+    animation: gentle-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  .animate-progress {
+    animation: progress 2s linear infinite;
+  }
+
+  .animate-blast {
+    animation: blast 1.5s ease-out;
+  }
+
+  .animate-particle {
+    animation: particle 1.2s ease-out infinite;
+  }
+
+  .animate-ripple {
+    animation: ripple 1s ease-out infinite;
+  }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes progress {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes blast {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes particle {
+  0% {
+    transform: translateY(0) scale(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-20px) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-40px) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}

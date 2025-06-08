@@ -1,0 +1,16 @@
+[
+  {
+    "path": "images/image_001.jpg",
+    "url": "http://localhost:8000/images/image_001.jpg",
+    "category": "dress",
+    "brand": "example",
+    "price": 99.99
+  },
+  {
+    "path": "images/image_002.jpg", 
+    "url": "http://localhost:8000/images/image_002.jpg",
+    "category": "shirt",
+    "brand": "example",
+    "price": 49.99
+  }
+]
