@@ -9,8 +9,22 @@ import sys
 import logging
 from datetime import datetime
 
-
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
+
+# Add after your other initializations
+def load_product_data():
+    csv_path = r"C:\Users\ANAND\Downloads\STYLUMIA\STYLUMIA\data\dresses_bd_processed_data.csv"
+    try:
+        df = pd.read_csv(csv_path, encoding='utf-8')
+    except UnicodeDecodeError:
+        df = pd.read_csv(csv_path, encoding='latin1')
+    return df
+
+
+# Load data once at startup
+product_df = load_product_data()
+print(f"Loaded {len(product_df)} products from CSV")
+
 
 # Configure logging for debugging
 logging.basicConfig(level=logging.INFO)
@@ -119,16 +133,19 @@ async def search_by_image(file: UploadFile = File(...), top_k: int = 5):
                 continue
                 
             product_data = products_df.loc[product_id].to_dict()
+            s3_url = product_data['feature_image_s3'] 
+            logger.info(f"📷 Product {product_id} S3 URL: {s3_url}")  # Fixed: moved outside dict
+
             
             result = {
                 "product_id": product_id,
-                "image_url": f"/images/images_dresses/{product_id}.jpg",  # Assumes .jpg extension
                 "product_name": product_data.get("product_name"),
                 "brand": product_data.get("brand"),
                 "price": product_data.get("selling_price"),
-                # Add other fields as needed
+                "image_url": s3_url,  # Direct S3 URL
             }
             results.append(result)
+            print(f"📷 Product: {product_id}, S3 URL: {s3_url}")
             logger.info(f"✓ Added result: {product_data.get('product_name', 'Unknown')}")
         
         logger.info(f"✓ Response prepared with {len(results)} results")
@@ -155,22 +172,6 @@ async def search_by_image(file: UploadFile = File(...), top_k: int = 5):
         raise HTTPException(500, f"Search failed: {str(e)}")
 
 
-IMAGES_BASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "images", "images_dresses")
-
-# Serve product images with corrected path handling
-@app.get("/images/images_dresses/{product_id}.jpg")
-async def get_product_image(product_id: str):
-    logger.info(f"Image request for product: {product_id}")
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    image_path = os.path.join(IMAGES_BASE_PATH, f"{product_id}.jpg")
-    logger.info(f"Looking for image at: {image_path}")
-    
-    if not os.path.exists(image_path):
-        logger.warning(f"Image not found: {image_path}")
-        raise HTTPException(404, "Image not found")
-    
-    logger.info(f"✓ Serving image: {product_id}.jpg")
-    return FileResponse(image_path)
 
 if __name__ == "__main__":
     import uvicorn
@@ -178,5 +179,4 @@ if __name__ == "__main__":
     logger.info("API endpoints available:")
     logger.info("  - GET  /health - Health check")
     logger.info("  - POST /search - Image search")
-    logger.info("  - GET  /images/images_dresses/{product_id}.jpg - Product images")
     uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")

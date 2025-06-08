@@ -27,9 +27,9 @@ const UploadZone: React.FC<UploadZoneProps> = ({ onFileUpload, onSearchResults }
     try {
       const isConnected = await apiService.testConnection();
       setBackendStatus(isConnected ? 'connected' : 'disconnected');
-      console.log(`🔌 Backend status: ${isConnected ? 'connected' : 'disconnected'}`);
+      console.log(` Backend status: ${isConnected ? 'connected' : 'disconnected'}`);
     } catch (error) {
-      console.error('❌ Backend connection check failed:', error);
+      console.error('Backend connection check failed:', error);
       setBackendStatus('disconnected');
     }
   };
@@ -52,10 +52,10 @@ const UploadZone: React.FC<UploadZoneProps> = ({ onFileUpload, onSearchResults }
     const imageFile = files.find(file => file.type.startsWith('image/'));
     
     if (imageFile) {
-      console.log('📁 File dropped:', imageFile.name);
+      console.log('File dropped:', imageFile.name);
       handleImageUpload(imageFile);
     } else {
-      console.warn('⚠️ No valid image file found in drop');
+      console.warn(' No valid image file found in drop');
       setUploadStatus('Please drop a valid image file');
       setTimeout(() => setUploadStatus(''), 3000);
     }
@@ -64,24 +64,24 @@ const UploadZone: React.FC<UploadZoneProps> = ({ onFileUpload, onSearchResults }
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith('image/')) {
-      console.log('📁 File selected:', file.name);
+      console.log(' File selected:', file.name);
       handleImageUpload(file);
     } else {
-      console.warn('⚠️ No valid image file selected');
+      console.warn(' No valid image file selected');
       setUploadStatus('Please select a valid image file');
       setTimeout(() => setUploadStatus(''), 3000);
     }
   }, []);
 
   const handleImageUpload = async (file: File) => {
-    console.log('🚀 Starting image upload and search process...');
+    console.log('Starting image upload and search process...');
     
     // Call the original onFileUpload callback
     onFileUpload(file);
     
     // Check backend connection before proceeding
     if (backendStatus !== 'connected') {
-      console.log('🔄 Backend not connected, attempting reconnection...');
+      console.log('Backend not connected, attempting reconnection...');
       await checkBackendConnection();
       
       if (backendStatus !== 'connected') {
@@ -94,12 +94,12 @@ const UploadZone: React.FC<UploadZoneProps> = ({ onFileUpload, onSearchResults }
     setUploadStatus('Uploading and analyzing image...');
 
     try {
-      console.log('📤 Sending image to backend for search...');
+      console.log(' Sending image to backend for search...');
       
       // Call the API service to search by image
       const searchResponse = await apiService.searchByImage(file, 8);
       
-      console.log('✅ Search completed successfully');
+      console.log('Search completed successfully');
       setUploadStatus(`Found ${searchResponse.total_found} similar products!`);
       
       // Call the results callback if provided
@@ -113,7 +113,7 @@ const UploadZone: React.FC<UploadZoneProps> = ({ onFileUpload, onSearchResults }
       }, 3000);
 
     } catch (error) {
-      console.error('❌ Image search failed:', error);
+      console.error(' Image search failed:', error);
       
       let errorMessage = 'Search failed. Please try again.';
       if (error instanceof Error) {

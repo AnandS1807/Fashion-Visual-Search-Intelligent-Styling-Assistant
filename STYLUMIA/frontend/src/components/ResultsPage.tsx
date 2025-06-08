@@ -25,8 +25,8 @@ const ResultsPage: React.FC<ResultsPageProps> = ({ uploadedImage }) => {
   const [error, setError] = useState<string | null>(null);
 
   const fetchProducts = useCallback(async () => {
-    console.log('🔍 Starting product fetch...');
-    console.log('📁 Uploaded image type:', typeof uploadedImage);
+    console.log('Starting product fetch...');
+    console.log('Uploaded image type:', typeof uploadedImage);
     
     setLoading(true);
     setError(null);
@@ -35,23 +35,23 @@ const ResultsPage: React.FC<ResultsPageProps> = ({ uploadedImage }) => {
       let fileToUpload: File;
       
       if (typeof uploadedImage === 'string') {
-        console.log('🔄 Converting string/URL to File...');
+        console.log('Converting string/URL to File...');
         // If it's a base64 string or URL, convert to File
         const response = await fetch(uploadedImage);
         const blob = await response.blob();
         fileToUpload = new File([blob], 'uploaded_image.jpg', { type: blob.type || 'image/jpeg' });
-        console.log('✅ Converted to File:', fileToUpload.name, fileToUpload.type);
+        console.log('Converted to File:', fileToUpload.name, fileToUpload.type);
       } else {
         // If it's already a File object
         fileToUpload = uploadedImage;
-        console.log('✅ Using existing File:', fileToUpload.name, fileToUpload.type);
+        console.log('Using existing File:', fileToUpload.name, fileToUpload.type);
       }
 
-      console.log('📤 Calling API service...');
+      console.log('Calling API service...');
       // Use the API service instead of direct fetch
       const searchResponse = await apiService.searchByImage(fileToUpload, 5);
       
-      console.log('✅ Search response received:', searchResponse);
+      console.log(' Search response received:', searchResponse);
       setProducts(searchResponse.results);
       
     } catch (err) {
@@ -133,18 +133,20 @@ const ResultsPage: React.FC<ResultsPageProps> = ({ uploadedImage }) => {
     price, 
     brand 
   }) => {
-    // Use the API service to get the correct image URL
-    const fullImageUrl = image_url.startsWith('http') ? image_url : apiService.getImageUrl(product_id);
+    // // Use the API service to get the correct image URL
+    // const fullImageUrl = image_url.startsWith('http') ? image_url : apiService.getImageUrl(product_id);
+    const displayImageUrl = image_url;
+    console.log(` Product ${product_id} image URL:`, image_url);
     
     return (
       <div className="glass-panel rounded-2xl overflow-hidden hover-lift group border-amber-200/20">
         <div className="relative">
           <img 
-            src={fullImageUrl} 
+            src={displayImageUrl} 
             alt={product_name}
             className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
             onError={(e) => {
-              console.warn(`❌ Failed to load image for product ${product_id}:`, fullImageUrl);
+              console.warn(` Failed to load S3 image for product ${product_id}`);
               (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400?text=Image+Not+Found';
             }}
           />
